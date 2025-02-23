@@ -1,0 +1,4 @@
+.box {
+	border: 1px solid black; /* 1px border, solid, black */
+	padding: 5x; /* 1px inner spacing */
+}
