@@ -1,3 +1,4 @@
+//begining
 const tracksContainer = document.getElementById("tracksContainer");
 const addTrackButton = document.getElementById("addTrackButton");
 const playMusicButton = document.getElementById("playMusicButton");
@@ -198,7 +199,7 @@ function playMusic() {
 				gainNode.connect(audioContext.destination);
 
 				oscillator.start(currentTime);
-				oscillator.stop(currentTime + 5); // Play tone for 0.5s
+				oscillator.stop(currentTime + 0.5); // Play tone for 0.5s
 
 				// Schedule next play time
 				nextPlayTimes[index] = currentTime + interval;
