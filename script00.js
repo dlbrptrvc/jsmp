@@ -11,7 +11,7 @@ shiftStepSlider.addEventListener("input", () => {
 });
 
 let tracks = [];
-let audioContext;
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let isPlaying = false;
 
 // Create a new slider
@@ -129,21 +129,21 @@ function createTrack() {
 	let frequencybox = randomizeSlider(
 		"Frequency",
 		"(Hz)",
-		[70, 1000, 0.01, 400],
+		[70, 300, 0.01, 70],
 		[0.1, 100, 0.1, 50],
 		[0.1, 10.0, 0.1, 1]
 	);
 	let periodbox = randomizeSlider(
 		"Period",
 		"(s)",
-		[0.01, 12.0, 0.01, 1],
+		[0.01, 2.0, 0.01, 1],
 		[0.01, 12.0, 0.01, 12.0],
 		[0.1, 10.0, 0.1, 1]
 	);
 	let volumebox = randomizeSlider(
 		"Volume",
 		"(%)",
-		[0, 1, 0.01, 0.5],
+		[0, 1, 0.01, 0],
 		[0.01, 1, 0.01, 0.1],
 		[0.1, 10.0, 0.1, 1]
 	);
@@ -171,7 +171,11 @@ function createTrack() {
 function playMusic() {
 	if (isPlaying) return; // Prevent multiple loops
 	isPlaying = true;
-	audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+	const oscillator = audioContext.createOscillator();
+	const gainNode = audioContext.createGain();
+
+	oscillator.type = "sine";
 
 	const nextPlayTimes = tracks.map(() => audioContext.currentTime); // Initialize play times
 	console.log("Creating a loop");
@@ -179,6 +183,9 @@ function playMusic() {
 		const currentTime = audioContext.currentTime;
 
 		tracks.forEach((track, index) => {
+			let gain = track.gain;
+			let oscillator = track.oscillator;
+
 			let frequencySlider = track.children[0].children[0].children[1];
 			let intervalSlider = track.children[1].children[0].children[1];
 			let volumeSlider = track.children[2].children[0].children[1];
@@ -189,10 +196,8 @@ function playMusic() {
 
 			// If it's time to play this track
 			if (currentTime >= nextPlayTimes[index]) {
-				const oscillator = audioContext.createOscillator();
-				const gainNode = audioContext.createGain();
+				fadeOut(index, gain);
 
-				oscillator.type = "sine";
 				oscillator.frequency.setValueAtTime(frequency, currentTime);
 				gainNode.gain.setValueAtTime(volume, currentTime);
 
@@ -200,7 +205,11 @@ function playMusic() {
 				gainNode.connect(audioContext.destination);
 
 				oscillator.start(currentTime);
-				oscillator.stop(currentTime + 0.5); // Play tone for 0.5s
+				// gainNode.gain.exponentialRampToValueAtTime(
+				// 	0.0001,
+				// 	audioContext.currentTime + 0.5
+				// );
+				// oscillator.stop(currentTime + 0.01); // Play tone for 0.5s
 
 				// Schedule next play time
 				nextPlayTimes[index] = currentTime + interval;
@@ -209,11 +218,33 @@ function playMusic() {
 
 		// Continue loop every 100ms
 		if (isPlaying) {
-			setTimeout(loop, 100);
+			setTimeout(loop, 50);
 		}
 	};
 
 	loop();
+}
+
+const fadeOutTimeouts = {}; // Store timeouts per track
+
+function fadeOut(trackIndex, gainNode) {
+	// Clear any existing timeout to avoid duplicate fades
+	if (fadeOutTimeouts[trackIndex]) {
+		clearTimeout(fadeOutTimeouts[trackIndex]);
+	}
+
+	// Store the timeout so it can be cleared later
+	fadeOutTimeouts[trackIndex] = setTimeout(() => {
+		gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+		fadeOutTimeouts[trackIndex] = null; // Reset after execution
+	}, 500);
+}
+
+function cancelFadeOut(trackIndex) {
+	if (fadeOutTimeouts[trackIndex]) {
+		clearTimeout(fadeOutTimeouts[trackIndex]);
+		fadeOutTimeouts[trackIndex] = null;
+	}
 }
 
 // Stop music

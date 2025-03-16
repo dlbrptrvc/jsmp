@@ -1,0 +1,123 @@
+:root {
+	--sidebar-bg: #2c3e50;
+	--sidebar-accent: #1abc9c;
+	--sidebar-hover: #34495e;
+	--text-light: white;
+	--main-bg: #ecf0f1;
+	--border-color: #2c3e50;
+	--button-add: #1abc9c;
+	--button-remove: #e74c3c;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	display: flex;
+	height: 100vh;
+}
+
+.sidebar {
+	width: 250px;
+	background: var(--sidebar-bg);
+	color: var(--text-light);
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+}
+
+.tabs {
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 10px;
+}
+
+.tab-btn {
+	background: var(--sidebar-hover);
+	color: var(--text-light);
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	flex: 1;
+}
+
+.tab-btn.active {
+	background: var(--sidebar-accent);
+}
+
+.tab-content {
+	flex: 1;
+	padding: 10px;
+}
+
+.tab-pane {
+	display: none;
+}
+
+.tab-pane.active {
+	display: block;
+}
+
+/* Main Window */
+.main-window {
+	flex: 1;
+	padding: 20px;
+	background: var(--main-bg);
+	position: relative;
+	display: flex;
+	flex-direction: row; /* Horizontal alignment for vertical racks */
+	align-items: flex-start;
+	overflow-x: auto;
+}
+
+/* Racks: Vertical Columns */
+#rackContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	width: 100%;
+	gap: 10px;
+	overflow-x: auto;
+}
+
+.rack {
+	flex: 1;
+	min-width: 150px;
+	height: 100%;
+	border: 2px solid var(--border-color);
+	background: white;
+	cursor: pointer;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	padding: 10px;
+}
+
+.rack.selected {
+	background: var(--sidebar-accent);
+	color: var(--text-light);
+}
+
+/* Buttons */
+#addRackButton,
+#removeRackButton {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	background: var(--button-add);
+	color: var(--text-light);
+	border: none;
+	padding: 10px 15px;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+#removeRackButton {
+	right: 60px;
+	background: var(--button-remove);
+}

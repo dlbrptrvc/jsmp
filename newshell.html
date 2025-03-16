@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>JS Synth</title>
+		<link rel="stylesheet" href="newstyle.css" />
+	</head>
+	<body>
+		<div class="container">
+			<aside class="sidebar">
+				<div class="tabs">
+					<button class="tab-btn active" data-tab="devices">Devices</button>
+					<button class="tab-btn" data-tab="options">Options</button>
+				</div>
+				<div class="tab-content">
+					<!-- Devices Tab -->
+					<div id="devices" class="tab-pane active">
+						<h3>Devices</h3>
+
+						<div class="form-group">
+							<label for="rackList">Select Rack:</label></br>
+							<select id="rackList"></select>
+						</div>
+
+						<div class="form-group">
+							<label for="deviceList">Select Device Type:</label></br>
+							<select id="deviceList"></select>
+						</div>
+
+						<button id="addDeviceButton">Add Device</button>
+
+						<div class="form-group">
+							<label for="currentDeviceList">Current Devices:</label></br>
+							<select id="currentDeviceList"></select>
+						</div>
+
+						<button id="removeDeviceButton">Remove Device</button>
+					</div>
+
+					<!-- Options Tab -->
+					<div id="options" class="tab-pane">
+						<h3>Options</h3>
+						<p>Settings and options go here.</p>
+					</div>
+				</div>
+			</aside>
+
+			<main class="main-window">
+				<div id="rackContainer">
+					<!-- Racks dynamically added here -->
+				</div>
+
+				<button id="addRackButton">+</button>
+				<button id="removeRackButton">-</button>
+			</main>
+		</div>
+		<script src="class.js"></script>
+
+		<script src="newscript.js"></script>
+	</body>
+</html>
