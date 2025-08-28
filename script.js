@@ -21,7 +21,7 @@ function createSlider(label, unit, [min, max, step, value]) {
 	sliderbox.style.justifyContent = "space-between";
 	let slider = document.createElement("input");
 	let slabel = document.createElement("label");
-	let svalue = document.createElement("span");
+	let svalue = document.createElement("input");
 	slabel.textContent = "||" + label + " " + unit;
 	slider.type = "range";
 	slider.min = min;
@@ -29,10 +29,18 @@ function createSlider(label, unit, [min, max, step, value]) {
 	slider.step = step;
 	slider.value = value;
 	slider.oninput = (e) => {
-		e.target.nextElementSibling.textContent = e.target.value;
+		e.target.nextElementSibling.value = parseFloat(e.target.value).toFixed(3);
+
 		//TODO:Reactivate music if it is playing
 	};
-	svalue.textContent = slider.value;
+	svalue.value = parseFloat(value).toFixed(3);
+	svalue.type = "text";
+	svalue.style.width = "50px";
+	svalue.style.textAlign = "right";
+	svalue.onchange = (e) => {
+		e.target.previousElementSibling.value = e.target.value;
+		slider.dispatchEvent(new Event("input"));
+	};
 	sliderbox.append(slabel, slider, svalue);
 	return sliderbox;
 }
@@ -103,7 +111,7 @@ function startRepeatingFunction(currentProcess, box) {
 		let randomValue = (
 			Math.random() * (intendedMax - intendedMin) +
 			intendedMin
-		).toFixed(2);
+		).toFixed(3);
 		// Clamp the random value within the slider's min and max limits
 		randomValue = Math.max(
 			parseFloat(slider.min),
@@ -129,23 +137,23 @@ function createTrack() {
 	let frequencybox = randomizeSlider(
 		"Frequency",
 		"(Hz)",
-		[70, 1000, 0.01, 400],
-		[0.1, 100, 0.1, 50],
-		[0.1, 10.0, 0.1, 1]
+		[70, 1000, 0.001, 400],
+		[0.001, 100, 0.001, 0.01],
+		[0.001, 10.0, 0.001, 0.001]
 	);
 	let periodbox = randomizeSlider(
 		"Period",
 		"(s)",
-		[0.01, 12.0, 0.01, 1],
-		[0.01, 12.0, 0.01, 12.0],
-		[0.1, 10.0, 0.1, 1]
+		[0.001, 12.0, 0.001, 1],
+		[0.001, 12.0, 0.001, 0.001],
+		[0.001, 10.0, 0.001, 0.001]
 	);
 	let volumebox = randomizeSlider(
 		"Volume",
 		"(%)",
-		[0, 1, 0.01, 0.5],
-		[0.01, 1, 0.01, 0.1],
-		[0.1, 10.0, 0.1, 1]
+		[0, 1, 0.001, 0],
+		[0.001, 1, 0.001, 0.001],
+		[0.001, 10.0, 0.001, 0.001]
 	);
 	let removebutton = document.createElement("button");
 	Object.assign(removebutton, {
@@ -261,7 +269,7 @@ document.getElementById("randomizeButton").addEventListener("click", () => {
 		const current = parseFloat(slider.value);
 		const min = Math.max(parseFloat(slider.min), current - step); // Ensure within slider min limit
 		const max = Math.min(parseFloat(slider.max), current + step); // Ensure within slider max limit
-		const randomValue = (Math.random() * (max - min) + min).toFixed(2); // True random value within range
+		const randomValue = (Math.random() * (max - min) + min).toFixed(3); // True random value within range
 		slider.value = randomValue;
 		slider.dispatchEvent(new Event("input"));
 
